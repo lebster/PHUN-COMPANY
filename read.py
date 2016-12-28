@@ -25,7 +25,6 @@ temp = list(tuple(x for x in new if x not in set(old)))
 #print (new)
 if temp > []:
     for pro in temp:
-        #item_info = requests.get(pro + ".xml")
         item_soup = BeautifulSoup(requests.get(pro + ".xml").content,"lxml")
         title = item_soup.find("title")
         for img_detail in item_soup.find_all("image")[1:]:
@@ -40,8 +39,8 @@ if temp > []:
                 with open(filename, 'wb') as image:
                     for chunk in request:
                         image.write(chunk)
-            #api.update_with_media(filename, title.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
-            print (title.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
+            api.update_with_media(filename, title.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
+            #print (title.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
             os.remove(filename)
 
 copyfile("new.txt", "old.txt")
