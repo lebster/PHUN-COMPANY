@@ -1,4 +1,4 @@
-#!/usr/bin/env /Users/philliptsan/Projects/phun-company/bin/python
+#!/usr/bin/env python
 
 import requests
 import tweepy, time, sys
@@ -16,26 +16,23 @@ auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 
 api = tweepy.API(auth)
 
-old = open("old.txt", "r")
-new = open("new.txt", "r")
+new = open("new.txt", "r").read().split("\n")
+old = open("old.txt", "r").read().split("\n")
 
-new_1 = new.read().split("\n")
-old_1 = old.read().split("\n")
-
-temp3 = list(tuple(x for x in new_1[-1] if x not in set(old_1[-1])))
-#print (temp3)
-#print (old_1)
-#print (new_1)
-if temp3 > []:
-    for pro in temp3:
-        item2 = requests.get(pro + ".xml")
-        soup3 = BeautifulSoup(item2.content,"lxml")
-        title = soup3.find("title")
-        for img_detail in soup3.find_all("image")[1:]:
+temp = list(tuple(x for x in new if x not in set(old)))
+#print (temp)
+#print (old)
+#print (new)
+if temp > []:
+    for pro in temp:
+        #item_info = requests.get(pro + ".xml")
+        item_soup = BeautifulSoup(requests.get(pro + ".xml").content,"lxml")
+        title = item_soup.find("title")
+        for img_detail in item_soup.find_all("image")[1:]:
             img_url = img_detail.find("src")
-        for var_ele in soup3.find_all("variant"):     
+        for var_ele in item_soup.find_all("variant"):
             variant = var_ele.find("id", {"type": "integer"})
-            option = var_ele.find("option1")   
+            #option = var_ele.find("option1")
             count = var_ele.find("inventory-quantity", {"type": "integer"})
             filename = variant.text + "-temp.jpg"
             request = requests.get(img_url.text)
@@ -43,8 +40,8 @@ if temp3 > []:
                 with open(filename, 'wb') as image:
                     for chunk in request:
                         image.write(chunk)
-            api.update_with_media(filename, title.text + ", " + option.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
-            #print (title.text + ", " + option.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
+            #api.update_with_media(filename, title.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
+            print (title.text + "\n" + "Inventory: " + count.text + "\n" + "http://www.funko-shop.com/cart/" + variant.text + ":1")
             os.remove(filename)
 
-copyfile("/Users/philliptsan/Projects/phun-company/new.txt", "/Users/philliptsan/Projects/phun-company/old.txt")
+copyfile("new.txt", "old.txt")
