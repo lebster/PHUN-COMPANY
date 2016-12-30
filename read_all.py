@@ -25,29 +25,28 @@ for site in site_list:
         domain = "{0.netloc}".format(urlsplit(site))[4:-4]
     else:
         domain = "{0.netloc}".format(urlsplit(site))[:-4]
-    new = open(os.getcwd() + "/files/" + domain + "-new.txt", "r").read().split("\n")
-    old = open(os.getcwd() + "/files/" + domain + "-old.txt", "r").read().split("\n")
+    new = open("files/" + domain + "-new.txt", "r").read().split("\n")
+    old = open("files/" + domain + "-old.txt", "r").read().split("\n")
     temp = list(tuple(x for x in new if x not in set(old)))
 
     if temp > []:
         for product in temp:
             item_soup = BeautifulSoup(requests.get(product + ".xml").content,"lxml")
             title = item_soup.find("title").text
-            print (title)
+            #print (title)
             for img_detail in item_soup.find_all("image")[1:]:
                 img_url = img_detail.find("src").text
             for var_ele in item_soup.find_all("variant"):
                 variant = var_ele.find("id", {"type": "integer"}).text
-                option = var_ele.find("option1")
-                count = var_ele.find("inventory-quantity", {"type": "integer"})
+                option = var_ele.find("option1").text
+                count = var_ele.find("inventory-quantity", {"type": "integer"}).text
                 filename = variant + "-temp.jpg"
                 request = requests.get(img_url)
                 if request.status_code == 200:
                     with open(filename, 'wb') as image:
                         for chunk in request:
                             image.write(chunk)
-                #api.update_with_media(filename, title.text + "\n" + "Inventory: " + count.text + "\n" + "http://" + domain + ".com/cart/" + variant.text + ":1")
-                print (title + ", " + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
+                api.update_with_media(filename, title + ", " + option + "\n" + "Inventory: " + count + "\n" + "http://" + domain + ".com/cart/" + variant + ":1")
+                #print (title + ", " + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
                 os.remove(filename)
-                
     copyfile(os.getcwd() + "/files/" + domain + "-new.txt", os.getcwd() + "/files/" + domain + "-old.txt")
