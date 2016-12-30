@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import requests
-import os
+import os, sys
 from bs4 import BeautifulSoup
 from urllib.parse import urlsplit
 
+os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
 site_list = open("sites.txt", "r").read().split("\n")
 
 for site in site_list:
