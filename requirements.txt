@@ -1,0 +1,5 @@
+requests==2.12.4
+BeautifulSoup4==4.5.1
+lxml==3.7.1
+tweepy==3.5.0
+configparser==3.5.0
