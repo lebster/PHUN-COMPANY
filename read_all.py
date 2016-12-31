@@ -53,7 +53,7 @@ for site in site_list:
                             with open(filename, 'wb') as image:
                                 for chunk in request:
                                     image.write(chunk)
-                        api.update_with_media(filename, title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
-                        #print(title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
+                        #api.update_with_media(filename, title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
+                        print(title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
                         os.remove(filename)
-    copyfile(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename) + "/files/" + domain + "-new.txt", os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename) + "/files/" + domain + "-old.txt")
+    copyfile(os.path.dirname(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-new.txt", os.path.dirname(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-old.txt")
