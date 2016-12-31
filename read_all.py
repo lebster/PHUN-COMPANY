@@ -56,4 +56,4 @@ for site in site_list:
                         api.update_with_media(filename, title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
                         #print(title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
                         os.remove(filename)
-    copyfile(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-new.txt", os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-old.txt")ß
+    copyfile(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename) + "/files/" + domain + "-new.txt", os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename) + "/files/" + domain + "-old.txt")
