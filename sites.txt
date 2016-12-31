@@ -6,3 +6,4 @@ http://www.addictmiami.com/sitemap_products_1.xml
 https://www.bdgastore.com/sitemap_products_1.xml
 http://www.sneakerpolitics.com/sitemap_products_1.xml
 http://www.saintalfred.com/sitemap_products_1.xml
+http://www.kithnyc.com/sitemap_products_1.xml
