@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
-import requests
-import tweepy, time, sys
-import os
-import inspect
+import requests, tweepy, time, sys, os, inspect, io
 from shutil import copyfile
+from PIL import Image
 from bs4 import BeautifulSoup
 from urllib.parse import urlsplit
 from configparser import SafeConfigParser
+from urllib.request import urlopen
 
 parser = SafeConfigParser()
 parser.read('config.ini')
@@ -15,12 +14,11 @@ os.chdir(os.path.dirname(os.path.abspath(inspect.getframeinfo(inspect.currentfra
 
 site_list = open('sites.txt', 'r').read().split('\n')
 
-for site in site_list:
+for site in list(filter(None, site_list)):
     if "{0.netloc}".format(urlsplit(site))[:-4].startswith('www.'):
         domain = "{0.netloc}".format(urlsplit(site))[4:-4]
     else:
         domain = "{0.netloc}".format(urlsplit(site))[:-4]
-    print(domain)
     new = open(os.path.dirname(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-new.txt", "r").read().split("\n")
     old = open(os.path.dirname(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-old.txt", "r").read().split("\n")
     temp = list(tuple(x for x in new if x not in set(old)))
@@ -48,12 +46,13 @@ for site in site_list:
                     count = var_ele.find("inventory-quantity", {"type": "integer"}).text
                     filename = variant + "-temp.jpg"
                     if int(count) > 1:
-                        request = requests.get(img_url)
-                        if request.status_code == 200:
-                            with open(filename, 'wb') as image:
-                                for chunk in request:
-                                    image.write(chunk)
-                        #api.update_with_media(filename, title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
-                        print(title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
+                        #request = requests.get(img_url)
+                        img_open = io.BytesIO(urlopen(img_url).read())
+                        img = Image.open(img_open)
+                        img.save(filename, optimize = True, quality = 85)
+                        inventory = count
+                        api.update_with_media(filename, title + option + "\n" + "Inventory: " + inventory + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
+                        #print(title + option + "\n" + "Inventory: " + count + "\n" + "http://www." + domain + ".com/cart/" + variant + ":1")
                         os.remove(filename)
+
     copyfile(os.path.dirname(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-new.txt", os.path.dirname(os.path.abspath(inspect.getframeinfo(inspect.currentframe()).filename)) + "/files/" + domain + "-old.txt")

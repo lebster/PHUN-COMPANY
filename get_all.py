@@ -9,8 +9,8 @@ os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
 site_list = open("sites.txt", "r").read().split("\n")
 
 for site in site_list:
-    if site is not []:
-        print(site)
+    if site is not "":
+        #print(site)
         soup = BeautifulSoup(requests.get(site).content,"lxml")
         #print(soup)
         products = soup.find_all("loc")
